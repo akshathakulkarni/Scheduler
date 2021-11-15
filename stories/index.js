@@ -58,11 +58,11 @@ storiesOf("DayListItem", module) //Initiates Storybook and registers our DayList
       backgrounds: [{ name: "dark", value: "#222f3e", default: true }],
     })
     .add("Monday", () => (
-      <DayList days={days} day={"Monday"} setDay={action("setDay")} />
+      <DayList key={days.id} days={days} day={"Monday"} setDay={action("setDay")} />
     ))
     .add("Tuesday", () => (
-      <DayList days={days} day={"Tuesday"} setDay={action("setDay")} />
+      <DayList key={days.id} days={days} day={"Tuesday"} setDay={action("setDay")} />
     ))
     .add("Wednesday", () => (
-        <DayList days={days} day={"Wednesday"} setDay={action("setDay")} />
+        <DayList key={days.id} days={days} day={"Wednesday"} setDay={action("setDay")} />
     ));
