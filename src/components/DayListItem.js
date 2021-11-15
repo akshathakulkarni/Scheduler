@@ -32,7 +32,7 @@ export default function DayListItem(props) {
     return spotsStatus;
   }
   return (
-    <li className={dayListClass} onClick = {() => {props.setDay(props.name)}}>
+    <li className={dayListClass} onClick = {() => {props.setDay(props.name)}} selected={props.selected}>
       <h2>{props.name}</h2> 
       <h3>{formatSpots(props)}</h3>
     </li>
