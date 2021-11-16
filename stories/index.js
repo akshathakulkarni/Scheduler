@@ -14,6 +14,7 @@ import Header from "components/Appointment/Header";
 import Empty from "components/Appointment/Empty";
 import Show from "components/Appointment/Show";
 import Confirm from "components/Appointment/Confirm";
+import Status from "components/Appointment/Status";
 
 storiesOf("Button", module)  //Initiates Storybook and registers our Button component
   .addParameters({
@@ -148,5 +149,6 @@ storiesOf("DayListItem", module) //Initiates Storybook and registers our DayList
         onDelete={action("onDelete")}/>)
         .add("Confirm", () => <Confirm message={"Delete the appointment?"} onConfirm={action("onConfirm")}
         onCancel={action("onCancel")}/>)
+        .add("Status", () => <Status message={"Deleting"}/>)
 
       
