@@ -48,12 +48,12 @@ const appointments = {
 export default function Application(props) {
   const [days, setDays] = useState([]);
 
-useEffect(() => {
-  axios.get('/api/days').then(response => {
-    console.log('response from axios = ', response.data);
-    setDays([...response.data]);
-  }, [])
-})
+  useEffect(() => {
+    axios.get("http://localhost:8001/api/days")
+    .then((response) => (setDays([...response.data])))
+  }, []);
+
+  console.log('days = ', days);
   const appointmentListArray = Object.values(appointments);
   const appointmentList = appointmentListArray.map(appointment => {
     return (
