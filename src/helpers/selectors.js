@@ -15,7 +15,7 @@ export function getInterviewersForDay(state, day) {
   for (let eachDay of state.days) {
     if(eachDay.name === day) {
         eachDay.interviewers.filter((item) => {
-        results.push(state.interviewers[item]);
+        results.push(state.interviewers.data[item]);
       })
     }
   }
