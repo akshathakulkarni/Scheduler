@@ -19,46 +19,37 @@ export default function Application(props) {
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   console.log('dailyapp = ', dailyAppointments);
   console.log('state = ', state);
+
   const interviewersData = getInterviewersForDay(state, state.day);
   console.log('interviewersData = ', interviewersData);
-  const setDay = day => setState({ ...state, day });
-  console.log('setDay = ', setDay);
-  //const setDays = days => setState({ ...state, days });
+
   useEffect(() => {
     Promise.all([
       axios.get('/api/days'),
       axios.get('/api/appointments'),
       axios.get('/api/interviewers')
     ]).then((all) => {
-      console.log('resolved promise days = ', all[0]);
-      setState(prev => ({...prev, days: all[0].data, appointments: all[1], interviewers: all[2]}));
+      console.log('resolved promise days = ', all);
+      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
     })
   }, []);
-  console.log('state.interviewers = ', state.interviewers);
-  //const appointmentListArray = Object.values(appointments);
-  const appointmentList = dailyAppointments.map(appointment => {
+  
+  const schedule = dailyAppointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
-
     return (
       <Appointment 
         key={appointment.id} 
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        interviewers={interviewersData}
       />
     )
   })
-  const interviewersList = interviewersData.map(interviewer => {
-    return (
-      <Appointment 
-        key={interviewer.id}
-        id={interviewer.id}
-        name={interviewer.name}
-        avatar={interviewer.avatar}
-      />
-    )
-  })
-  console.log('state.days = ', state.days);
+  
+  const setDay = day => setState({ ...state, day });
+  // console.log('state after day update = ', state);
+  // console.log('state.days = ', state.days);
   return (
     <main className="layout">
       <section className="sidebar">
@@ -73,7 +64,8 @@ export default function Application(props) {
           key={state.days.id}
           days={state.days}
           value={state.day}
-          onChange={setDay}/>
+          onChange={setDay}
+          />
       </nav>
       <img
         className="sidebar__lhl sidebar--centered"
@@ -82,8 +74,7 @@ export default function Application(props) {
       />
       </section>
       <section className="schedule">
-        {appointmentList}
-        {interviewersList}
+        {schedule}
         <Appointment key="last" time="5pm" />
       </section>
     </main>
