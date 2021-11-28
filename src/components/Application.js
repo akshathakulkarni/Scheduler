@@ -15,13 +15,13 @@ export default function Application(props) {
     appointments: {},
     interviewers: {}
   });
+  console.log('state = ', state);
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   console.log('dailyapp = ', dailyAppointments);
-  console.log('state = ', state);
-
+  
   const interviewersData = getInterviewersForDay(state, state.day);
-  console.log('interviewersData = ', interviewersData);
+  //console.log('interviewersData = ', interviewersData);
 
   useEffect(() => {
     Promise.all([
@@ -33,6 +33,32 @@ export default function Application(props) {
       setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
     })
   }, []);
+  const setDay = day => setState({ ...state, day });
+
+  const bookInterview = (id, interview) => {
+    console.log('bookInterview = ', id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    setState({
+      ...state,
+      appointments
+    });
+    axios
+      .put(`/api/appointments/${id}`, {
+        id: id,
+        interview: interview
+      })
+      // .then((response) => {
+      //   setState(...response.data);
+      // });
+    }
+
   
   const schedule = dailyAppointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
@@ -43,13 +69,11 @@ export default function Application(props) {
         time={appointment.time}
         interview={interview}
         interviewers={interviewersData}
+        bookInterview={bookInterview}
       />
     )
   })
   
-  const setDay = day => setState({ ...state, day });
-  // console.log('state after day update = ', state);
-  // console.log('state.days = ', state.days);
   return (
     <main className="layout">
       <section className="sidebar">
