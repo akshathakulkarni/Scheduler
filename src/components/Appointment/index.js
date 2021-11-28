@@ -15,6 +15,8 @@ const SAVING = "SAVING";
 const DELETE = "DELETE";
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
   console.log('Appointment props received = ', props);
@@ -28,14 +30,14 @@ export default function Appointment(props) {
       interviewer
     };
     transition(SAVING);
-    props.bookInterview(props.id, interview);
-    transition(SHOW);
+    props.bookInterview(props.id, interview)
+    .then(() => transition(SHOW));
   }
   function deleteInterview() {
-    transition(CONFIRM);
+    
     transition(DELETE);
-    props.cancelInterview(props.id);
-    transition(EMPTY);
+    props.cancelInterview(props.id)
+    .then(() => transition(EMPTY))
   }
   function updateInterview() {
     transition(EDIT);
@@ -52,18 +54,19 @@ export default function Appointment(props) {
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
-          onDelete={deleteInterview}
+          onDelete={() => transition(CONFIRM)}
           onEdit={updateInterview}
         />
       )}
       {mode === CREATE && <Form interviewers={props.interviewers} onCancel={() => back()} onSave={save} />}
       {mode === SAVING && <Status message={"Saving.."}/>}
-      {mode === CONFIRM && <Confirm />}
+      {mode === CONFIRM && <Confirm message={"Are you sure you want to delete this interview"
+} onCancel={() => back()} onConfirm={deleteInterview}/>}
       {mode === DELETE && <Status message={"Deleting.."}/>}
       {mode === EDIT && 
         <Form 
           student={props.interview.student}   
-          interviewer={props.interview.interviewer} 
+          interviewer={props.interview.interviewer.id} 
           interviewers={props.interviewers} 
           onCancel={() => back()} 
           onSave={save}/>}
