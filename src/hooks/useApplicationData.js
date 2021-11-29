@@ -16,7 +16,6 @@ export default function useApplicationData() {
       axios.get('/api/appointments'),
       axios.get('/api/interviewers')
     ]).then((all) => {
-      console.log('resolved promise days = ', all);
       setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
     })
   }, []);
@@ -24,43 +23,68 @@ export default function useApplicationData() {
   const setDay = day => setState({ ...state, day });
 
   const bookInterview = (id, interview) => {
-    console.log('bookInterview = ', id, interview);
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      interview: {...interview}
     };
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
+    const updatedDays = updateSpots(id, interview );
     return axios
       .put(`/api/appointments/${id}`, {
         id: id,
         interview: interview
       })
       .then(() => {
-        setState({
+        setState(prev => ({
           ...state,
-          appointments
-        });
+          appointments,
+          days: updatedDays
+        }));
       })
     }
 
     const cancelInterview = (id) => {
+      const updatedDays = updateSpots(id, null );
+      const appointment = {
+        ...state.appointments[id],
+        interview: null
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
       return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
-        const appointment = {
-          ...state.appointments[id],
-          interview: null
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
-        setState({...state, appointments})
+        setState({...state, appointments, days: updatedDays})
       })
     }
+
+    const updateSpots = (id, interview) => {
+      let spotsCounter = 0;
+      let dayId = '';
+      state.days.forEach((day) => {
+        if (day.appointments.includes(id)) {
+          dayId = day.id;
+          day.appointments.forEach((item) => {
+            if ((state.appointments[item].interview === null) && (item !== id)) {
+              spotsCounter += 1;
+            }
+          })
+        }
+        
+      })
+      const day = { ...state.days[dayId - 1],
+        spots: interview ? spotsCounter : (spotsCounter + 1)
+      }
+      const days = [ ...state.days ];
+      days[dayId - 1] = day;
+
+      return days;
+    } 
   
     return { state, setDay, bookInterview, cancelInterview };
 }
