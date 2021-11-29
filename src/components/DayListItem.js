@@ -28,7 +28,6 @@ export default function DayListItem(props) {
     if (props.spots === 5){
       spotsStatus = '5 spots remaining';
     }
-
     return spotsStatus;
   }
   return (

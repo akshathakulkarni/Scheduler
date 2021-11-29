@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import 'components/Appointment/styles.scss';
 import Header from './Header';
 import Show from './Show';
@@ -20,12 +20,10 @@ const ERROR_SAVE = "ERROR_SAVE";
 const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
-  console.log('Appointment props received = ', props);
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
   function save(name, interviewer) {
-    console.log('SAvve function = ', name, interviewer);
     const interview = {
       student: name,
       interviewer
@@ -50,7 +48,6 @@ export default function Appointment(props) {
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => {
         transition(CREATE);
-        console.log("Clicked onAdd");
       }} />}
       {mode === SHOW && (
         <Show
@@ -65,7 +62,7 @@ export default function Appointment(props) {
       {mode === CONFIRM && <Confirm message={"Are you sure you want to delete this interview"
 } onCancel={() => back()} onConfirm={deleteInterview}/>}
       {mode === DELETING && <Status message={"Deleting.."}/>}
-      {mode === ERROR_SAVE && <Error message={"Sorry, we could not create the appointment"} onClose={() => back()}/>}
+      {mode === ERROR_SAVE && <Error message={"Could not create the appointment"} onClose={() => back()}/>}
       {mode === ERROR_DELETE && <Error message={"Could not delete the appointment"} onClose={() => back()} />}
       {mode === EDIT && 
         <Form 
@@ -74,9 +71,6 @@ export default function Appointment(props) {
           interviewers={props.interviewers} 
           onCancel={() => back()} 
           onSave={save}/>}
-      {/* {props.interview ? <Show student={props.interview.student} interviewer={props.interview.interviewer.name}/> : <Empty /> }  */}
-      {/* {props.time && <h2>Appointment at {props.time}</h2>}
-      {!props.time && <h2>No Appointments</h2>} */}
     </article>
   );
 };
