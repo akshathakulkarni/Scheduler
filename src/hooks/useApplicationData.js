@@ -75,18 +75,15 @@ export default function useApplicationData() {
             }
           })
         }
-        
       })
       const day = { ...state.days[dayId - 1],
         spots: interview ? spotsCounter : (spotsCounter + 1)
       }
       const days = [ ...state.days ];
       days[dayId - 1] = day;
-
       return days;
     } 
-  
-    return { state, setDay, bookInterview, cancelInterview };
+  return { state, setDay, bookInterview, cancelInterview };
 }
 
 
