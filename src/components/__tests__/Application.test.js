@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, cleanup, waitForElement, fireEvent, prettyDOM, getByText, getAllByTestId, getByAltText, getByPlaceholderText, queryByText, queryByAltText } from "@testing-library/react";
+import { render, cleanup, waitForElement, fireEvent, prettyDOM, getByText, getAllByTestId, getByAltText, getByPlaceholderText, queryByText, queryByAltText, getByDisplayValue } from "@testing-library/react";
 
 import Application from "components/Application";
 
@@ -40,7 +40,7 @@ describe("Application", () => {
 
     fireEvent.click(getByText(appointment, "Save"));
     //console.log(prettyDOM(appointment));
-    //expect(getByText(appointment, "Saving")).toBeInTheDocument();
+    //expect(queryByText(appointment, "Saving")).toBeInTheDocument();
     await waitForElement(() => queryByText(appointment, "Lydia Miller-Jones"));
 
     const day = getAllByTestId(container, "day").find(day =>
@@ -63,7 +63,7 @@ describe("Application", () => {
     fireEvent.click(queryByAltText(appointment, "Delete"));
     // 4. Check that the confirmation message is shown.
     expect(getByText(appointment, "Are you sure you want to delete this interview")).toBeInTheDocument();
-    debug();
+    //debug();
     // 5. Click the "Confirm" button on the confirmation.
     fireEvent.click(queryByText(appointment, "Confirm"));
     // 6. Check that the element with the text "Deleting" is displayed.
@@ -77,6 +77,34 @@ describe("Application", () => {
     //expect(getByText(day, "2 spots reamaining")).toBeInTheDocument();
 
   });
+
+  it("loads data, edits an interview and keeps the spots remaining for Monday the same", async() => {
+    // 1. Render the Application.
+    const { container, debug } = render(<Application />);
+    // 2. Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+    
+    // 3. Click the "Edit" button on the booked appointment.
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByText(appointment, "Archie Cohen")
+    );
+    fireEvent.click(queryByAltText(appointment, "Edit"));
+    
+    //4.Change the student and interviewer
+    fireEvent.change(getByDisplayValue(appointment, "Archie Cohen"), {
+      target: { value: "Samantha Ming" }
+    });
+    fireEvent.click(getByAltText(appointment, "Tori Malcolm"));
+    //5.Click the "Save" button
+    fireEvent.click(getByText(appointment, "Save"));
+    //6.Wait until the names are updated
+    await waitForElement(() => queryByText(appointment, "Samantha Ming"));
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+    //7.Check that the DayListItem with the text "Monday" has the text "2 spots remaining".
+    expect(queryByText(day, "2 spots remaining"))
+  })
 
 })
 
