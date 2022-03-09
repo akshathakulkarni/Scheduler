@@ -9,14 +9,16 @@ The app makes API requests to [Scheduler API](https://github.com/lighthouse-labs
 
 ## Setup
 
-Dependencies : 
-axios: ^0.24.0,
-classnames: ^2.2.6,
-eslint: ^5.16.0,
-normalize.css: ^8.0.1,
-react: ^16.14.0,
-react-dom: ^16.9.0,
-react-scripts: 3.0.0
+Dependencies 
+
+* axios: ^0.24.0
+* classnames: ^2.2.6
+* normalize.css: ^8.0.1
+* react: ^16.9.0
+* react-dom: ^16.9.0
+* react-hooks-testing-library: ^0.6.0
+* react-scripts: 3.0.0
+
 
 Install all dependencies with `npm install`.
 
