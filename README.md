@@ -1,5 +1,6 @@
 # Interview Scheduler 
-Interview Scheduler is a React application that allows users to book and cancel interviews. 
+Interview Scheduler is a single page React application that allows users to book, edit and cancel interviews.
+The app makes API requests to [Scheduler API](https://github.com/lighthouse-labs/scheduler-api) to fetch and update appointment data. 
 
 # Final Product
 !["Screenshot - view appointments"](https://github.com/akshathakulkarni/Scheduler/blob/master/docs/View.png?raw=true)
